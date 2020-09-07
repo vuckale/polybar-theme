@@ -1,0 +1,168 @@
+;==========================================================
+;
+;
+;   ██████╗  ██████╗ ██╗  ██╗   ██╗██████╗  █████╗ ██████╗
+;   ██╔══██╗██╔═══██╗██║  ╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗
+;   ██████╔╝██║   ██║██║   ╚████╔╝ ██████╔╝███████║██████╔╝
+;   ██╔═══╝ ██║   ██║██║    ╚██╔╝  ██╔══██╗██╔══██║██╔══██╗
+;   ██║     ╚██████╔╝███████╗██║   ██████╔╝██║  ██║██║  ██║
+;   ╚═╝      ╚═════╝ ╚══════╝╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+;
+;
+;   To learn more about how to configure Polybar
+;   go to https://github.com/polybar/polybar
+;
+;   The README contains a lot of information
+;
+;==========================================================
+
+[colors]
+;background = ${xrdb:color0:#222}
+background = #222
+background-alt = #444
+;foreground = ${xrdb:color7:#222}
+foreground = #dfdfdf
+foreground-alt = #555
+primary = #ffb52a
+secondary = #e60053
+alert = #bd2c40
+[colors_top]
+background = #fff
+foreground = #000
+
+[bar/top]
+width = 50%
+height = 27
+radius = 6.0
+fixed-center = false
+background = ${colors_top.background}
+foreground = ${colors_top.foreground}
+enable-ipc = true
+bottom = false
+offset-x = 25%
+line-size = 3
+line-color = #f00
+border-size = 4
+border-color = #00000000
+padding-left = 0
+padding-right = 2
+module-margin-left = 1
+module-margin-right = 2
+font-0 = fixed:pixelsize=10;1
+font-1 = unifont:fontformat=truetype:size=8:antialias=true:0
+font-2 = siji:pixelsize=10;1
+font-3 = Material Design Icons Desktop:style=Regular:pixelsize=15:antialias=true;2
+modules-right = wlan temperature cpu date menu-apps
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-prefix = 󰭄
+format-prefix-foreground = ${colors.foreground-alt}
+;format-underline = #f90000
+label = %percentage:2%%
+
+[module/wlan]
+type = internal/network
+interface = wlp3s0
+interval = 3.0
+format-connected = <ramp-signal>
+format-disconnected = %{A1:gnome-control-center wifi:}󰤮%{A}
+;format-connected-underline = #9f78e1
+;label-connected = %{A1:nm-connection-editor:}%essid%%{A}
+;format-disconnected-underline = ${self.format-connected-underline}
+;label-disconnected = %{A1:gnome-terminal -e nmtui:}%ifname%%{A} disconnected
+;label-disconnected = %{A1:gnome-terminal -e nmtui:}%ifname%%{A} disconnected
+;label-disconnected-foreground = ${colors.foreground-alt}
+ramp-signal-0 = %{A1:gnome-control-center wifi:}󰤫%{A}
+ramp-signal-1 = %{A1:gnome-control-center wifi:}󰤟%{A}
+ramp-signal-2 = %{A1:gnome-control-center wifi:}󰤢%{A}
+ramp-signal-3 = %{A1:gnome-control-center wifi:}󰤥%{A}
+ramp-signal-4 = %{A1:gnome-control-center wifi:}󰤨%{A}
+;ramp-signal-foreground = ${colors.foreground-alt}
+ramp-signal-foreground = ${colors_top.foreground}
+
+[module/date]
+type = internal/date
+interval = 1
+;date =
+;date-alt = " %Y-%m-%d"
+time = %H:%M
+time-alt = %H:%M:%S
+format-prefix = 󰅐
+format-prefix-foreground = ${colors_top.foreground}
+;format-underline = #0a6cf5
+;label = %date% %time%
+label = %time%
+
+[module/temperature]
+type = internal/temperature
+thermal-zone = 0
+warn-temperature = 90
+interval = 1
+hwmon-path = /sys/devices/platform/coretemp.0/hwmon/hwmon1/temp2_input
+base-temperature = 50
+format = <ramp> <label>
+;format-underline = #f50a4d
+format-warn = <ramp> <label-warn>
+;format-warn-underline = ${self.format-underline}
+label = %temperature-c%
+label-warn = %temperature-c%
+label-warn-foreground = ${colors.secondary}
+ramp-0 = 󱃃
+ramp-1 = 󰔏
+ramp-2 = 󱃂
+ramp-foreground = ${colors.foreground-alt}
+
+[settings]
+screenchange-reload = true
+;compositing-background = xor
+;compositing-background = screen
+;compositing-foreground = source
+;compositing-border = over
+;pseudo-transparency = false
+
+[global/wm]
+margin-top = 5
+margin-bottom = 5
+
+[module/menu-apps]
+type = custom/menu
+; If true, <label-toggle> will be to the left of the menu items (default).
+; If false, it will be on the right of all the items.
+expand-right = true
+; "menu-LEVEL-N" has the same properties as "label-NAME" with
+; the additional "exec" property
+;
+; Available exec commands:
+;   menu-open-LEVEL
+;   menu-close
+; Other commands will be executed using "/bin/sh -c $COMMAND"
+menu-0-0 = 󰐥
+menu-0-0-exec = gnome-terminal --geometry=0x0 -e 'gnome-session-quit --power-off & exit'
+menu-0-1 = 󰍁
+menu-0-1-exec = gnome-screensaver-command -l & exit
+menu-1-0 = 󰐥
+menu-1-0-exec = gnome-terminal --geometry=0x0 -e 'gnome-session-quit --power-off & exit'
+menu-1-1 = Chromium
+menu-1-1-exec = chromium &
+menu-2-0 = Gimp
+menu-2-0-exec = gimp &
+menu-2-1 = Scrot
+menu-2-1-exec = scrot &
+; vim:ft=dosini
+; Available tags:
+;   <label-toggle> (default) - gets replaced with <label-(open|close)>
+;   <menu> (default)
+; If expand-right is true, the default will be "<label-toggle><menu>" and the
+; other way around otherwise.
+; Note that if you use <label-toggle> you must also include
+; the definition for <label-open>
+; format = <label-toggle><menu>
+label-open = 󰁚
+label-close = 󰁓
+; Optional item separator
+; Default: none
+label-separator = 󰿈
