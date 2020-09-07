@@ -30,8 +30,8 @@ alert = #bd2c40
 background = #fff
 foreground = #000
 
-[bar/top]
-width = 50%
+[bar/top-right]
+width = 9%
 height = 27
 radius = 6.0
 fixed-center = false
@@ -39,7 +39,7 @@ background = ${colors_top.background}
 foreground = ${colors_top.foreground}
 enable-ipc = true
 bottom = false
-offset-x = 25%
+offset-x = 90.4%
 line-size = 3
 line-color = #f00
 border-size = 4
@@ -52,7 +52,35 @@ font-0 = fixed:pixelsize=10;1
 font-1 = unifont:fontformat=truetype:size=8:antialias=true:0
 font-2 = siji:pixelsize=10;1
 font-3 = Material Design Icons Desktop:style=Regular:pixelsize=15:antialias=true;2
-modules-right = wlan temperature cpu date menu-apps
+modules-center = battery
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+[bar/top]
+width = 80%
+height = 27
+radius = 6.0
+fixed-center = false
+background = ${colors_top.background}
+foreground = ${colors_top.foreground}
+enable-ipc = true
+bottom = false
+offset-x = 10%
+line-size = 3
+line-color = #f00
+border-size = 4
+border-color = #00000000
+padding-left = 0
+padding-right = 2
+module-margin-left = 1
+module-margin-right = 2
+font-0 = fixed:pixelsize=10;1
+font-1 = unifont:fontformat=truetype:size=8:antialias=true:0
+font-2 = siji:pixelsize=10;1
+font-3 = Material Design Icons Desktop:style=Regular:pixelsize=15:antialias=true;2
+modules-right = wlan menu-apps
+modules-left = temperature cpu
+modules-center = date
 cursor-click = pointer
 cursor-scroll = ns-resize
 
@@ -87,15 +115,15 @@ ramp-signal-foreground = ${colors_top.foreground}
 [module/date]
 type = internal/date
 interval = 1
-;date =
-;date-alt = " %Y-%m-%d"
+date = 
+date-alt = " %Y-%m-%d"
 time = %H:%M
 time-alt = %H:%M:%S
-format-prefix = 󰅐
+;format-prefix = 󰅐
 format-prefix-foreground = ${colors_top.foreground}
 ;format-underline = #0a6cf5
 ;label = %date% %time%
-label = %time%
+label = %time% %date%
 
 [module/temperature]
 type = internal/temperature
@@ -161,8 +189,51 @@ menu-2-1-exec = scrot &
 ; Note that if you use <label-toggle> you must also include
 ; the definition for <label-open>
 ; format = <label-toggle><menu>
-label-open = 󰁚
-label-close = 󰁓
+label-open = 󰍟
+label-close = 󰍞
 ; Optional item separator
 ; Default: none
 label-separator = 󰿈
+
+[module/battery]
+type = internal/battery
+battery = BAT0
+adapter = ADP1
+full-at = 96
+
+format-charging = 󱐥 <ramp-capacity> <label-charging>
+;format-charging-underline = #ffb52a
+; Available tokens:
+;   %percentage% (default) - is set to 100 if full-at is reached
+;   %percentage_raw%
+;   %time%
+;   %consumption% (shows current charge rate in watts)
+label-charging = %percentage%%
+
+format-discharging =  󱐤 <ramp-capacity> <label-discharging>
+;format-discharging-underline = ${self.format-charging-underline}
+; Available tokens:
+;   %percentage% (default) - is set to 100 if full-at is reached
+;   %percentage_raw%
+;   %time%
+;   %consumption% (shows current discharge rate in watts)
+label-discharging = %percentage%%
+
+
+format-full-prefix = 󰁹
+format-full-prefix-foreground = ${colors.foreground-alt}
+;format-full-underline = ${self.format-charging-underline}
+
+ramp-capacity-0 = 󱃍
+ramp-capacity-1 = 󰁺
+ramp-capacity-2 = 󰁻
+ramp-capacity-3 = 󰁼
+ramp-capacity-4 = 󰁽
+ramp-capacity-5 = 󰁾
+ramp-capacity-6 = 󰁿
+ramp-capacity-7 = 󰂀
+ramp-capacity-8 = 󰂁
+ramp-capacity-9 = 󰂂
+ramp-capacity-10 = 󰁹
+ramp-capacity-foreground = ${colors.foreground-alt}
+
