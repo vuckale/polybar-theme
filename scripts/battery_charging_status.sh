@@ -4,4 +4,6 @@ if [ $state = "discharging" ]; then
 	echo 󱐤
 elif [$state = "charging" ]; then
 	echo 󱐥
+elif [$state = "fully-charged" ]; then
+	echo 󱐥
 fi

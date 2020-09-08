@@ -30,6 +30,32 @@ alert = #bd2c40
 background = #fff
 foreground = #000
 
+[bar/top-left]
+width = 9%
+height = 27
+radius = 6.0
+fixed-center = false
+background = ${colors_top.background}
+foreground = ${colors_top.foreground}
+enable-ipc = true
+bottom = false
+offset-x = 1%
+line-size = 3
+line-color = #f00
+border-size = 4
+border-color = #00000000
+padding-left = 0
+padding-right = 2
+module-margin-left = 1
+module-margin-right = 2
+font-0 = fixed:pixelsize=10;1
+font-1 = unifont:fontformat=truetype:size=8:antialias=true:0
+font-2 = siji:pixelsize=10;1
+font-3 = Material Design Icons Desktop:style=Regular:pixelsize=15:antialias=true;2
+modules-left = pulseaudio-control
+cursor-click = pointer
+cursor-scroll = ns-resize
+
 [bar/top-right]
 width = 9%
 height = 27
@@ -238,11 +264,24 @@ ramp-capacity-9 = 󰂂
 ramp-capacity-10 = 󰁹
 ramp-capacity-foreground = ${colors.foreground-alt}
 
+[module/pulseaudio-control]
+type = custom/script
+tail = true
+label=%output%
+;format-underline = ${colors_top.foreground}
+exec = ~/.config/polybar/scripts/pulseaudio-control.bash listen
+click-right = exec pavucontrol &
+click-left = ~/.config/polybar/scripts/pulseaudio-control.bash togmute
+click-middle = ~/.config/polybar/scripts/pulseaudio-control.bash next-sink
+scroll-up = ~/.config/polybar/scripts/pulseaudio-control.bash up
+scroll-down = ~/.config/polybar/scripts/pulseaudio-control.bash down
+label-padding = 2
+label-foreground = ${colors_top.foreground}
+
 [module/charging_status]
 type = custom/script
 interval = 1
 format = <label>
 label = %{A1:gnome-control-center power:}%output%%{A}
-exec = $HOME/.config/polybar/battery_charging_status.sh
-
+exec = ~/.config/polybar/scripts/battery_charging_status.sh
 
