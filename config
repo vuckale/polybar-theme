@@ -27,8 +27,8 @@ primary = #ffb52a
 secondary = #e60053
 alert = #bd2c40
 [colors_top]
-background = #fff
-foreground = #000
+background = #885e697a
+foreground = #ffffff
 
 [bar/top-left]
 width = 9%
@@ -136,8 +136,8 @@ ramp-signal-1 = %{A1:gnome-control-center wifi:}󰤟%{A}
 ramp-signal-2 = %{A1:gnome-control-center wifi:}󰤢%{A}
 ramp-signal-3 = %{A1:gnome-control-center wifi:}󰤥%{A}
 ramp-signal-4 = %{A1:gnome-control-center wifi:}󰤨%{A}
-;ramp-signal-foreground = ${colors.foreground-alt}
-ramp-signal-foreground = ${colors_top.foreground}
+ramp-signal-foreground = ${colors.foreground-alt}
+;ramp-signal-foreground = ${colors_top.foreground}
 
 [module/date]
 type = internal/date
@@ -196,17 +196,11 @@ expand-right = true
 ;   menu-close
 ; Other commands will be executed using "/bin/sh -c $COMMAND"
 menu-0-0 = 󰐥
+menu-0-0-foreground = ${colors.foreground-alt}
 menu-0-0-exec = gnome-terminal --geometry=0x0 -e 'gnome-session-quit --power-off & exit'
 menu-0-1 = 󰍁
+menu-0-1-foreground = ${colors.foreground-alt}
 menu-0-1-exec = gnome-screensaver-command -l & exit
-menu-1-0 = 󰐥
-menu-1-0-exec = gnome-terminal --geometry=0x0 -e 'gnome-session-quit --power-off & exit'
-menu-1-1 = Chromium
-menu-1-1-exec = chromium &
-menu-2-0 = Gimp
-menu-2-0-exec = gimp &
-menu-2-1 = Scrot
-menu-2-1-exec = scrot &
 ; vim:ft=dosini
 ; Available tags:
 ;   <label-toggle> (default) - gets replaced with <label-(open|close)>
@@ -217,7 +211,9 @@ menu-2-1-exec = scrot &
 ; the definition for <label-open>
 ; format = <label-toggle><menu>
 label-open = 󰍟
+label-open-foreground = ${colors.foreground-alt}
 label-close = 󰍞
+label-close-foreground = ${colors.foreground-alt}
 ; Optional item separator
 ; Default: none
 label-separator = 󰿈
@@ -276,7 +272,7 @@ click-middle = ~/.config/polybar/scripts/pulseaudio-control.bash next-sink
 scroll-up = ~/.config/polybar/scripts/pulseaudio-control.bash up
 scroll-down = ~/.config/polybar/scripts/pulseaudio-control.bash down
 label-padding = 2
-label-foreground = ${colors_top.foreground}
+label-foreground = ${colors.foreground-alt}
 
 [module/charging_status]
 type = custom/script
@@ -284,6 +280,7 @@ interval = 1
 format = <label>
 label = %{A1:gnome-control-center power:}%output%%{A}
 exec = ~/.config/polybar/scripts/battery_charging_status.sh
+label-foreground = ${colors.foreground-alt}
 
 [module/cpu_frequency]
 type = custom/script
