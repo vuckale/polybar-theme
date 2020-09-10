@@ -1,0 +1,1 @@
+pulseaudio-control module taken from [https://github.com/marioortizmanero/polybar-pulseaudio-control](https://github.com/marioortizmanero/polybar-pulseaudio-control) but modified.
