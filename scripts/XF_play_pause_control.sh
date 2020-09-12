@@ -5,5 +5,5 @@ if [ "$state" = "	state: RUNNING" ]; then
 	echo "%{F#fff}󰐎%{F-}"
 else
 	# xdotool key XF86AudioPlay
-	echo "%{F#555}󰐎%{F-}"
+	echo "%{F$FOREGROUND_ALT}󰐎%{F-}"
 fi 
