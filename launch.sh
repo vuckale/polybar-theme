@@ -5,7 +5,7 @@ killall -q polybar
 HWMON_PATH=$(for i in /sys/class/hwmon/hwmon*/temp*_input; do echo "$(<$(dirname $i)/name): $(cat ${i%_*}_label 2>/dev/null || echo $(basename ${i%_*})) $(readlink -f $i)"; done | grep "coretemp: Core 0" | awk -F' ' '{print $4}')
 export HWMON_PATH
 
-COLOR="vaporwave1.ini"
+COLOR="default.ini"
 
 BACKGROUND=$(grep "background "  ~/.config/polybar/colors/$COLOR | cut -d'=' -f2 | sed 's/ //g')
 export BACKGROUND
