@@ -22,7 +22,8 @@ DATE_MODULE_HELPER_ALT="%{F$FOREGROUND_ALT}󰑄 %{A1:gnome-control-center dateti
 export DATE_MODULE_HELPER_ALT
 DATE_MODULE_CALENDAR="%a %b %d %Y %{A1:gnome-calendar:}%{F$FOREGROUND_ALT}󰃭%{F-}%{A}"
 export DATE_MODULE_CALENDAR
-
+SPECIAL=$(grep "special"  ~/.config/polybar/colors/$COLOR | cut -d'=' -f2 | sed 's/ //g')
+export SPECIAL
 # Launch top-left, top and top-right
 echo "---" | tee -a /tmp/polybar1.log /tmp/polybar2.log /tmp/polybar3.log
 polybar --config=~/.config/polybar/config.ini top-left >>/tmp/polybar1.log 2>&1 & disown
