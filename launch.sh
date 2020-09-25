@@ -26,7 +26,7 @@ DATE_MODULE_HELPER_ALT="%{F$FOREGROUND_ALT}󰑄 %{A1:gnome-control-center dateti
 DATE_MODULE_CALENDAR="%a %b %d %Y %{A1:gnome-calendar:}%{F$FOREGROUND_ALT}󰃭%{F-}%{A}"
 
 # tint foreground_alt for memory usage
-hexinput=`echo "${FOREGROUND_ALT//#}" | tr '[:lower:]' '[:upper:]'` # uppercase-ing
+hexinput=`echo "${FOREGROUND//#}" | tr '[:lower:]' '[:upper:]'` # uppercase-ing
 a=`echo $hexinput | cut -c-2`
 b=`echo $hexinput | cut -c3-4`
 c=`echo $hexinput | cut -c5-6`
@@ -35,13 +35,15 @@ r=`echo "ibase=16; $a" | bc`
 g=`echo "ibase=16; $b" | bc`
 b=`echo "ibase=16; $c" | bc`
 
-FOREGROUND_ALT_TINT_0=$(echo $(calculate_tint $r $g $b 0.5))
-FOREGROUND_ALT_TINT_1=$(echo $(calculate_tint $r $g $b 0.4))
-FOREGROUND_ALT_TINT_2=$(echo $(calculate_tint $r $g $b 0.3))
-FOREGROUND_ALT_TINT_3=$(echo $(calculate_tint $r $g $b 0.2))
+FOREGROUND_TINT_0=$(echo $(calculate_tint $r $g $b 0.4))
+FOREGROUND_TINT_1=$(echo $(calculate_tint $r $g $b 0.3))
+FOREGROUND_TINT_2=$(echo $(calculate_tint $r $g $b 0.2))
+FOREGROUND_TINT_3=$(echo $(calculate_tint $r $g $b 0.1))
+# FOREGROUND_ALT_TINT_EMPTY=$(echo $(calculate_tint $r $g $b 4))
+
 
 # Exporting variables
-export BACKGROUND FOREGROUND FOREGROUND_ALT ALERT DATE_MODULE_HELPER DATE_MODULE_HELPER_ALT DATE_MODULE_CALENDAR HWMON_PATH FOREGROUND_ALT_TINT_0 FOREGROUND_ALT_TINT_1 FOREGROUND_ALT_TINT_2 FOREGROUND_ALT_TINT_3
+export BACKGROUND FOREGROUND FOREGROUND_ALT ALERT DATE_MODULE_HELPER DATE_MODULE_HELPER_ALT DATE_MODULE_CALENDAR HWMON_PATH FOREGROUND_TINT_0 FOREGROUND_TINT_1 FOREGROUND_TINT_2 FOREGROUND_TINT_3
 
 # Launch top-left, top and top-right
 echo "---" | tee -a /tmp/polybar1.log /tmp/polybar2.log /tmp/polybar3.log
