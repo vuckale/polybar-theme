@@ -12,7 +12,7 @@ MAX_VOL=100  # Maximum volume
 AUTOSYNC="no"  # All programs have the same volume if enabled
 VOLUME_ICONS=( "󰕿 " "󰖀 " "󰕾 " )  # Volume icons array, from lower volume to higher
 MUTED_ICON="󰸈 "  # Muted volume icon
-MUTED_COLOR="%{F#6b6b6b}"  # Color when the audio is muted
+MUTED_COLOR="%{F$FOREGROUND_EMPTY}" # Color when the audio is muted
 VOLUME_COLOR="%{F$FOREGROUND}"
 NOTIFICATIONS="yes"  # Notifications when switching sinks if enabled
 SINK_ICON=""  # Icon always shown to the left of the default sink names
@@ -26,8 +26,8 @@ SINK_BLACKLIST=(
 # Maps PulseAudio sink names to human-readable names
 declare -A SINK_NICKNAMES
 SINK_NICKNAMES["alsa_output.usb-SomeManufacturer_SomeUsbSoundcard-00.analog-stereo"]="External Soundcard"
-SINK_NICKNAMES["alsa_output.pci-0000_00_03.0.hdmi-stereo-extra2"]="󰽟"
-SINK_NICKNAMES["alsa_output.pci-0000_00_1b.0.analog-stereo"]="󰌥"
+SINK_NICKNAMES["alsa_output.pci-0000_00_03.0.hdmi-stereo-extra2"]=" 󰽟"
+SINK_NICKNAMES["alsa_output.pci-0000_00_1b.0.analog-stereo"]=" 󰌥"
 
 # Environment & global constants for the script
 LANGUAGE=en_US  # Some calls depend on English outputs of pactl
