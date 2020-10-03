@@ -17,18 +17,18 @@ if [ "$mouse_charging_status" = "Unknown" ]; then
 	echo "%{F$FOREGROUND_ALT}󰍾%{F-}"
 else
 	if [ "$mouse_charging_status" = "Charging" ]; then
-		prefix=$(echo "%{F$FOREGROUND_ALT}󰦋%{F-}󱐌")
+		prefix=$(echo "%{F$FOREGROUND_ALT}󰦋󱐌")
 	else
-		prefix=$(echo "%{F$FOREGROUND_ALT}󰦋%{F-}")
+		prefix=$(echo "%{F$FOREGROUND_ALT}󰦋")
 	fi
 	if [ "$state" == 100 ];then
-		echo "$prefix󱊣"
+		echo "$prefix󱊣%{F-}$state%"
 	elif [ "$state" -lt 100 ] && [ "$state" -ge 50 ]; then
-		echo "$prefix󱊢"
+		echo "$prefix󱊢%{F-}$state%"
 	elif [ "$state" -lt 50 ] && [ "$state" -ge 10 ]; then
-		echo "$prefix󱊡"
+		echo "$prefix󱊡%{F-}$state%"
 	elif [ "$state" -lt 10 ]; then
-		echo "$prefix󱃍"
+		echo "$prefix󱃍%{F-}$state%"
 	fi
 fi
 
