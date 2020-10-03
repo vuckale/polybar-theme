@@ -1,16 +1,14 @@
 #!/bin/bash
 
 get_mounted_drive_info(){
-    raw=$(lsblk | grep /media | cut -d' ' -f 1,8,12)
-    device_block_and_size=$(echo $raw | cut -d' ' -f 1,2)
-    device_name=$(echo $raw | cut -d' ' -f3 | cut -d'/' -f4)
-    output=$(echo "$device_block_and_size $device_name")
-
-    if [ -z "$output" ]; then
-        echo "empty"
-    else
-        echo "$output"
-    fi
+    unset DRIVES
+    while IFS= read -r LINE; do
+    DRIVES+=("${LINE}")
+    done < <(lsblk -r | grep /media | cut -d' ' -f 7,8 | cut -d'/' -f 4)
+    for drive in ${DRIVES[@]}; do
+        echo -e "󱊟 $drive \c"
+    done
+    printf "\n"
 }
 
 case "$1" in
