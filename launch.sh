@@ -44,6 +44,9 @@ FOREGROUND_EMPTY=$(echo "#55${FOREGROUND_TINT_0//#}")
 # Exporting variables
 export BACKGROUND FOREGROUND FOREGROUND_ALT ALERT DATE_MODULE_HELPER DATE_MODULE_HELPER_ALT DATE_MODULE_CALENDAR HWMON_PATH FOREGROUND_TINT_0 FOREGROUND_TINT_1 FOREGROUND_TINT_2 FOREGROUND_TINT_3 FOREGROUND_EMPTY
 
+export OPEN_WEATHER_API_KEY="<YOUR_API_KEY>"
+export OPEN_WEATHER_CITY_ID="<CITY_ID>"
+
 # Launch top-left, top and top-right
 echo "---" | tee -a /tmp/polybar1.log /tmp/polybar2.log /tmp/polybar3.log
 polybar --config=~/.config/polybar/config.ini top-left >>/tmp/polybar1.log 2>&1 & disown
