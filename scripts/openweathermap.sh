@@ -1,4 +1,4 @@
-#!/bin/env sh
+#!/bin/sh
 get_icon() {
     case $1 in
         01d) icon="";;
@@ -22,15 +22,26 @@ get_icon() {
     echo $icon
 }
 
-KEY="$(echo $OPEN_WEATHER_API_KEY)"
-CITY="$(echo "id=$OPEN_WEATHER_CITY_ID")"
+KEY=$(echo "$OPEN_WEATHER_API_KEY")
+CITY=""
 UNITS="metric"
 SYMBOL="°"
 
 API="https://api.openweathermap.org/data/2.5"
-weather=$(curl -s "$API/weather?appid=$KEY&$CITY&units=$UNITS")
 
-weather_temp=$(echo "$weather" | jq ".main.temp" | cut -d "." -f 1)
-weather_icon=$(echo "$weather" | jq -r ".weather[0].icon")
-echo "$(get_icon "$weather_icon")" "$weather_temp$SYMBOL"
 
+location=$(curl -sf https://location.services.mozilla.com/v1/geolocate?key=geoclue)
+
+if [ -n "$location" ]; then
+	location_lat="$(echo "$location" | jq '.location.lat')"
+	location_lon="$(echo "$location" | jq '.location.lng')"
+
+	weather=$(curl -sf "$API/weather?appid=$KEY&lat=$location_lat&lon=$location_lon&units=$UNITS")
+fi
+
+if [ -n "$weather" ]; then
+    weather_temp=$(echo "$weather" | jq ".main.temp" | cut -d "." -f 1)
+    weather_icon=$(echo "$weather" | jq -r ".weather[0].icon")
+
+    echo "$(get_icon "$weather_icon")" "$weather_temp$SYMBOL"
+fi
