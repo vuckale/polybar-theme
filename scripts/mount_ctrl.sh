@@ -4,7 +4,7 @@ get_mounted_drive_info(){
     unset DRIVES
     while IFS= read -r LINE; do
     DRIVES+=("${LINE}")
-    done < <(lsblk -r | grep /media | cut -d' ' -f 7,8 | cut -d'/' -f 4)
+    done < <(lsblk -r | grep /media | cut -d' ' -f 7,8 | cut -d'/' -f 4 && lsblk -r | grep /run | cut -d' ' -f 7,8 | cut -d'/' -f 4 )
     count=$(echo -e "${#DRIVES[@]}\c")
     if [ "$count" = "0" ]; then
 	sep=$(echo -e "\c")
