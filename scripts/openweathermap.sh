@@ -35,13 +35,11 @@ location=$(curl -sf https://location.services.mozilla.com/v1/geolocate?key=geocl
 if [ -n "$location" ]; then
 	location_lat="$(echo "$location" | jq '.location.lat')"
 	location_lon="$(echo "$location" | jq '.location.lng')"
-
 	weather=$(curl -sf "$API/weather?appid=$KEY&lat=$location_lat&lon=$location_lon&units=$UNITS")
 fi
 
 if [ -n "$weather" ]; then
     weather_temp=$(echo "$weather" | jq ".main.temp" | cut -d "." -f 1)
     weather_icon=$(echo "$weather" | jq -r ".weather[0].icon")
-
-    echo "$(get_icon "$weather_icon")" "$weather_temp$SYMBOL"
+    echo "$(get_icon "$weather_icon")" ""$(( $weather_temp + 2 ))"$SYMBOL"
 fi
