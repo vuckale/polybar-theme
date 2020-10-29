@@ -36,6 +36,8 @@ if [ -n "$location" ]; then
 	location_lat="$(echo "$location" | jq '.location.lat')"
 	location_lon="$(echo "$location" | jq '.location.lng')"
 	weather=$(curl -sf "$API/weather?appid=$KEY&lat=$location_lat&lon=$location_lon&units=$UNITS")
+else
+	weather=$(curl -sf "$API/weather?appid=$KEY&id=$CITY&units=$UNITS")
 fi
 
 if [ -n "$weather" ]; then
