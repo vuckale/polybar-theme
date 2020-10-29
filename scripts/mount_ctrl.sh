@@ -15,7 +15,7 @@ get_mounted_drive_info(){
     for drive in ${DRIVES[@]}; do
         name=$(lsblk -r | grep -F "$drive" | cut -d' '  -f 1)
         udiskctl=$(echo "udisksctl unmount -b /dev/$name && notify-send \"mount_ctrl.sh\" \"unmounted $drive\" && sleep 3 && udisksctl power-off -b /dev/$name && notify-send \"mount_ctrl.sh\" \"powered-off $drive\"")
-        echo -e "%{F$FOREGROUND_ALT}󱊟%{F-} %{T8}%{F$FOREGROUND}$drive%{F-}%{T-} %{A1:$udiskctl:}%{F$FOREGROUND_ALT}󰤁%{F-}%{A} | \c"
+        echo -e "%{F$FOREGROUND_ALT}󱊟%{F-} %{T7}%{F$FOREGROUND}$drive%{F-}%{T-} %{A1:$udiskctl:}%{F$FOREGROUND_ALT}󰤁%{F-}%{A} | \c"
     done
     printf "\n"
 }
