@@ -16,7 +16,7 @@ day_light = None
 day_light_left = None
 soup = None
 options = None
-printing_style = None
+
 
 def sunIsUp():
 	global current_dateTime, sunset_dateTime, sunrise_dateTime
@@ -76,8 +76,7 @@ details_dict = {
 }
 
 
-icons = {
-	"--current" : ' ',
+weather_icons = {
 	"--d-feels-like" : '󰙍 ',
 	"--d-sunrise-sunset" : '󰖜󰖛 ',
 	"--d-high-low" : ' ',
@@ -89,6 +88,12 @@ icons = {
 	"--d-visibility" : '󰈈 ',
 	"--d-moon-phase" : '󰽥 '
 }
+
+misc_icons = {
+	"arrow-down" : '󰁅 ',
+	"arrow-up" : '󰁝 '
+}
+
 
 
 def check_options(option, opt_str, value, parser):
@@ -107,6 +112,12 @@ def iterate_details(details, index):
 		detail = details[index]
 		label = detail.select('div[data-testid^=WeatherDetailsLabel]')
 		data = detail.select('div[data-testid^=wxData]')
+
+		if detail.svg['name'] == 'pressure':
+			svg = data[0].svg
+			if svg != None:
+				return [label[0].text, misc_icons[svg['name']] + data[0].text]
+
 		return [label[0].text, data[0].text]
 	elif index == -1:
 		# for scraping feels like section
@@ -198,6 +209,9 @@ def main():
 	parser.add_option("--day-light-left",
                   action="store_true", dest="day_light_left",
                   help="print how long is left before day light ends")
+	parser.add_option("--current-timestamp",
+                  action="store_true", dest="current_timestamp",
+                  help="print timestamp when current temperature was measured")
 
 	(options, args) = parser.parse_args()
 
@@ -228,10 +242,9 @@ def main():
 		print("ERROR: --one-line option alone doesn't have anything to print")
 		sys.exit()
 
-
-	global 	current_dateTime, sunset_dateTime, sunrise_dateTime, url, soup, day_light, day_light_left, printing_style
-
 	printing_style = ' ' + str(options.one_line) + ' ' if options.one_line else '\n'
+
+	global 	current_dateTime, sunset_dateTime, sunrise_dateTime, url, soup, day_light, day_light_left
 
 	if options.url:
 		url = options.url
@@ -263,15 +276,20 @@ def main():
 			if options.current or options.location:
 				current_section = soup.select('div[id^=WxuCurrentConditions-main-b3094163-ef75-4558-8d9a-e35e6b9b1034]')[0]
 
-			if options.current:
-				currentWeather = current_section.find("div", { "class" : "CurrentConditions--primary--3xWnK" })
-				temperature = currentWeather.span.string
-				weather_condition = currentWeather.div.string
-				output +=  'Current: ' + getIcon(weather_condition) + temperature + printing_style if options.verbose else ' ' + getIcon(weather_condition) + " " + temperature + 'C' + printing_style
+			if options.current_timestamp:
+				timestamp = current_section.find("div", {"class" : "CurrentConditions--timestamp--1SWy5"}).text
+				# output += timestamp + printing_style
 
 			if options.location:
 				location = current_section.find("h1", {"class" : "CurrentConditions--location--1Ayv3"}).text
 				output += location + printing_style
+
+			if options.current:
+				currentWeather = current_section.find("div", { "class" : "CurrentConditions--primary--3xWnK" })
+				temperature = currentWeather.span.string
+				weather_condition = currentWeather.div.string
+				output +=  'Current: ' + getIcon(weather_condition) + temperature + (' ' + timestamp if options.current_timestamp else '') + printing_style if options.verbose else getIcon(weather_condition) + " " + temperature + (' ' + timestamp if options.current_timestamp else '') + printing_style
+
 
 			if any(details_dict.values()) or options.details:
 				details = soup.select('section[data-testid^=TodaysDetailsModule]')[0]
@@ -279,54 +297,54 @@ def main():
 
 			if details_dict["--d-feels-like"]:
 				feels_like = iterate_details(details, -1)
-				output += feels_like[0] + ': ' + feels_like[1] + printing_style if options.verbose else icons['--d-feels-like'] + feels_like[1] + printing_style
+				output += feels_like[0] + ': ' + feels_like[1] + printing_style if options.verbose else weather_icons['--d-feels-like'] + feels_like[1] + printing_style
 
 			if details_dict["--d-sunrise-sunset"]:
 				sunrise_sunset = iterate_details(details, -2)
-				output += 'sunrise/sunset: ' + sunrise_sunset+ printing_style if options.verbose else icons['--d-sunrise-sunset'] + sunrise_sunset + printing_style
+				output += 'sunrise/sunset: ' + sunrise_sunset+ printing_style if options.verbose else weather_icons['--d-sunrise-sunset'] + sunrise_sunset + printing_style
 
 			if details_dict["--d-high-low"]:
 				high_low = iterate_details(other_details_list, 0)
-				output += high_low[0] + ': ' + high_low[1] + printing_style if options.verbose else icons['--d-high-low'] + high_low[1] + printing_style
+				output += high_low[0] + ': ' + high_low[1] + printing_style if options.verbose else weather_icons['--d-high-low'] + high_low[1] + printing_style
 
 			if details_dict["--d-wind"]:
 				wind = iterate_details(other_details_list, 1)
-				output += wind[0] + ': ' + wind[1] + printing_style if options.verbose else icons['--d-wind'] +  wind[1] + printing_style
+				output += wind[0] + ': ' + wind[1] + printing_style if options.verbose else weather_icons['--d-wind'] +  wind[1] + printing_style
 
 			if details_dict["--d-humidity"]:
 				humidity = iterate_details(other_details_list, 2)
-				output += humidity[0] + ': ' + humidity[1] + printing_style if options.verbose else icons['--d-humidity'] + humidity[1] + printing_style
+				output += humidity[0] + ': ' + humidity[1] + printing_style if options.verbose else weather_icons['--d-humidity'] + humidity[1] + printing_style
 
 			if details_dict["--d-dew-point"]:
 				dew_point = iterate_details(other_details_list, 3)
-				output += dew_point[0] + ': ' + dew_point[1] + printing_style if options.verbose else icons['--d-dew-point'] + dew_point[1] + printing_style
+				output += dew_point[0] + ': ' + dew_point[1] + printing_style if options.verbose else weather_icons['--d-dew-point'] + dew_point[1] + printing_style
 
 			if details_dict["--d-pressure"]:
 				pressure = iterate_details(other_details_list, 4)
-				output += pressure[0] + ': ' + pressure[1] + printing_style if options.verbose else icons['--d-pressure'] + pressure[1] + printing_style
+				output += pressure[0] + ': ' + pressure[1] + printing_style if options.verbose else weather_icons['--d-pressure'] + pressure[1] + printing_style
 
 			if details_dict["--d-uw-index"]:
 				uw_index = iterate_details(other_details_list, 5)
-				output += uw_index[0] + ': ' + uw_index[1] + printing_style if options.verbose else icons['--d-uw-index'] + uw_index[1] + printing_style
+				output += uw_index[0] + ': ' + uw_index[1] + printing_style if options.verbose else weather_icons['--d-uw-index'] + uw_index[1] + printing_style
 
 			if details_dict["--d-visibility"]:
 				visibility = iterate_details(other_details_list, 6)
-				output += visibility[0] + ': ' + visibility[1] + printing_style if options.verbose else icons['--d-visibility'] + visibility[1] + printing_style
+				output += visibility[0] + ': ' + visibility[1] + printing_style if options.verbose else weather_icons['--d-visibility'] + visibility[1] + printing_style
 
 			if details_dict["--d-moon-phase"]:
 				moon_phase = iterate_details(other_details_list, 7)
-				output += moon_phase[0] + ': ' + moon_phase[1] + printing_style if options.verbose else icons['--d-moon-phase'] + moon_phase[1] + printing_style
+				output += moon_phase[0] + ': ' + moon_phase[1] + printing_style if options.verbose else weather_icons['--d-moon-phase'] + moon_phase[1] + printing_style
 
 			if options.details:
 				feels_like = iterate_details(details, -1)
-				output += feels_like[0] + ': ' + feels_like[1] + printing_style if options.verbose else icons['--d-feels-like'] + feels_like[1] + printing_style
+				output += feels_like[0] + ': ' + feels_like[1] + printing_style if options.verbose else weather_icons['--d-feels-like'] + feels_like[1] + printing_style
 				sunrise_sunset = iterate_details(details, -2)
-				output += 'sunrise/sunset: ' + sunrise_sunset+ printing_style if options.verbose else icons['--d-sunrise-sunset'] + sunrise_sunset + printing_style
-				icons_list = list(icons.values())
+				output += 'sunrise/sunset: ' + sunrise_sunset+ printing_style if options.verbose else weather_icons['--d-sunrise-sunset'] + sunrise_sunset + printing_style
+				icons_list = list(weather_icons.values())
 				for i in range (0, len(other_details_list)):
 					detail = iterate_details(other_details_list, i)
-					output += detail[0] + ': ' + detail[1] + printing_style if options.verbose else icons_list[i + 3] + detail[1] + printing_style
-			
+					output += detail[0] + ': ' + detail[1] + printing_style if options.verbose else icons_list[i + 2] + detail[1] + printing_style
+
 			if sunIsUp():
 				if options.sun_position or options.day_light_duration or options.day_light_left:
 					day_light = sunset_dateTime -sunrise_dateTime
@@ -354,3 +372,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
