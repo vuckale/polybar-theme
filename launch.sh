@@ -16,7 +16,7 @@ killall -q polybar
 HWMON_PATH=$(for i in /sys/class/hwmon/hwmon*/temp*_input; do echo "$(<$(dirname $i)/name): $(cat ${i%_*}_label 2>/dev/null || echo $(basename ${i%_*})) $(readlink -f $i)"; done | grep "coretemp: Core 0" | awk -F' ' '{print $4}')
 
 # Parsing colors from $COLOR as environment variables
-COLOR="autumn_var3.ini"
+COLOR="nord.ini"
 BACKGROUND=$(grep "background "  ~/.config/polybar/colors/$COLOR | cut -d'=' -f2 | sed 's/ //g')
 FOREGROUND=$(grep "foreground "  ~/.config/polybar/colors/$COLOR | cut -d'=' -f2 | sed 's/ //g')
 FOREGROUND_ALT=$(grep "foreground-alt"  ~/.config/polybar/colors/$COLOR | cut -d'=' -f2 | sed 's/ //g')
@@ -41,11 +41,10 @@ FOREGROUND_TINT_2=$(echo $(calculate_tint $r $g $b 0.2))
 FOREGROUND_TINT_3=$(echo $(calculate_tint $r $g $b 0.1))
 FOREGROUND_EMPTY=$(echo "#55${FOREGROUND_TINT_0//#}")
 
-# sign up at https://home.openweathermap.org/users/sign_up to get your openweather api key
-OPEN_WEATHER_API_KEY="<OPENWEATHER API KEY>"
-
+WEATHER_CHANNEL_PY_URL=$(echo "$weather_channel_py_url")
+echo "$WEATHER_CHANNEL_PY_URL"
 # Exporting variables
-export BACKGROUND FOREGROUND FOREGROUND_ALT ALERT DATE_MODULE_HELPER DATE_MODULE_HELPER_ALT DATE_MODULE_CALENDAR HWMON_PATH FOREGROUND_TINT_0 FOREGROUND_TINT_1 FOREGROUND_TINT_2 FOREGROUND_TINT_3 FOREGROUND_EMPTY OPEN_WEATHER_API_KEY
+export BACKGROUND FOREGROUND FOREGROUND_ALT ALERT DATE_MODULE_HELPER DATE_MODULE_HELPER_ALT DATE_MODULE_CALENDAR HWMON_PATH FOREGROUND_TINT_0 FOREGROUND_TINT_1 FOREGROUND_TINT_2 FOREGROUND_TINT_3 FOREGROUND_EMPTY OPEN_WEATHER_API_KEY WEATHER_CHANNEL_PY_URL
 
 # Launch top-left, top and top-right
 echo "---" | tee -a /tmp/polybar1.log /tmp/polybar2.log /tmp/polybar3.log
