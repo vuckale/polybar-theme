@@ -1,10 +1,19 @@
 #!/bin/bash
-state=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep "state")
-state=$(echo $state | cut -d':' -f2)
-if [ $state = "discharging" ]; then
-	echo 󱐤
-elif [$state = "charging" ]; then
-	echo 󱐥
-elif [$state = "fully-charged" ]; then
-	echo 󱐥
+
+for i in /sys/class/power_supply/BAT*; do
+  sysclass=$(echo "$(<$(dirname $i)): $(cat ${i%_*}_label 2>/dev/null || echo $(basename ${i%_*})) $i" | grep "BAT" | awk -F' ' '{print $3}')
+done
+
+if [ -d "$sysclass" ]; then
+	state=$(cd $sysclass && cat status)
+	if [ $state = "Discharging" ]; then
+		echo 󱐤
+	elif [ $state = "Charging" ]; then
+		echo 󱐥
+	elif [ $state = "Full" ]; then
+		echo 󱐥
+	fi
+else
+	echo "X"
 fi
+
