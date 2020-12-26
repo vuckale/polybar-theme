@@ -1,11 +1,11 @@
 #!/bin/bash
-if [ ! "$(which rfkill)" = "" ]; then
-	status=$(rfkill list | grep -A2 Bluetooth)
+if [ ! "$( which rfkill )" = "" ]; then
+	status=$( rfkill list | grep -A2 Bluetooth )
 	if [ ! -z "$status" ]; then
 		status_soft=$( echo "$status" | grep "Soft blocked" )
 		status_hard=$( echo "$status" | grep "Hard blocked")
-		status_soft_parsed=$(while read line; do echo "${line}"; done <<< "$status_soft")
-		status_hard_parsed=$(while read line; do echo "${line}"; done <<< "$status_hard")
+		status_soft_parsed=$( while read line; do echo "${line}"; done <<< "$status_soft" )
+		status_hard_parsed=$( while read line; do echo "${line}"; done <<< "$status_hard" )
 		if [ "$status_soft_parsed" = "Soft blocked: yes" ]; then
 			echo "󰂲"
 		elif [ "$status_soft_parsed" = "Soft blocked: no" ]; then

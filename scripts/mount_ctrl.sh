@@ -1,15 +1,14 @@
 #!/bin/bash
-
 get_mounted_drive_info(){
     unset DRIVES
     while IFS= read -r LINE; do
-    DRIVES+=("${LINE}")
-    done < <(lsblk -r | grep /media | cut -d' ' -f 7,8 | cut -d'/' -f 4 && lsblk -r | grep /run | cut -d' ' -f 7,8 | cut -d'/' -f 4 )
-    count=$(echo -e "${#DRIVES[@]}\c")
+        DRIVES+=("${LINE}")
+    done < <( lsblk -r | grep /media | cut -d' ' -f 7,8 | cut -d'/' -f 4 && lsblk -r | grep /run | cut -d' ' -f 7,8 | cut -d'/' -f 4 )
+    count=$( echo -e "${#DRIVES[@]}\c" )
     if [ "$count" = "0" ]; then
-	sep=$(echo -e "\c")
+	    sep=$( echo -e "\c" )
     else
-	sep=$(echo -e " | \c")
+	    sep=$( echo -e " | \c" )
     fi
     echo -e "%{A1:gnome-disks:}󰋊$sep%{A}\c"
     for drive in ${DRIVES[@]}; do
@@ -22,6 +21,12 @@ get_mounted_drive_info(){
 
 case "$1" in
     --list)
-        get_mounted_drive_info
+        if [ ! "$(which udisksctl)" = "" ]; then
+            get_mounted_drive_info
+        else
+            # install udisks2
+            # install libnotify-bin for norify-send notifications
+            echo "X"
+        fi
         ;;
 esac
