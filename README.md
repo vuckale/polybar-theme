@@ -32,3 +32,7 @@ and you have to copy part after ```:``` which is ```Material Design Icons Deskto
 [bar/example]
 font-3 = Material Design Icons Desktop:style=Regular:pixelsize=15:antialias=true;4
 ```
+For all scripts to work install:
+```bash
+sudo apt install rfkill lm-sensors udisks2 libnotify-bin pulseaudio upower pacmd
+```
