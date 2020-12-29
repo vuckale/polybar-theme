@@ -4,6 +4,7 @@ import requests
 import datetime
 from getopt import getopt
 import sys
+import os
 from optparse import OptionParser, OptionValueError
 import optparse
 
@@ -64,56 +65,55 @@ def getIcon(weather_condition):
 		# Light Rain/Freezing Rain
 		# Wintry Mix
 		# Light Rain
-		
 	}
 
 	if weather_condition in conditions:
-		return weather_condition + ' ' + sunset_sunrise if options.verbose\
+		return weather_condition + '' + sunset_sunrise if options.verbose\
 			 else conditions[weather_condition] + sunset_sunrise
 	else:
-		return weather_condition + ' ' + sunset_sunrise
+		return weather_condition + '' + sunset_sunrise
 
 
 details_dict = {
-	"--d-feels-like" : False,
-	"--d-sunrise-sunset" : False,
-	"--d-high-low" : False,
-	"--d-wind" : False,
-	"--d-humidity" : False,
-	"--d-dew-point" : False,
-	"--d-pressure" : False,
-	"--d-uw-index" : False,
-	"--d-visibility" : False,
-	"--d-moon-phase" : False
+	"--d-feels-like" : (False, -1),
+	"--d-sunrise-sunset" : (False, -2),
+	"--d-high-low" : (False, 0),
+	"--d-wind" : (False, 1),
+	"--d-humidity" : (False, 2),
+	"--d-dew-point" : (False, 3),
+	"--d-pressure" : (False, 4),
+	"--d-uw-index" : (False, 5),
+	"--d-visibility" : (False, 6),
+	"--d-moon-phase" : (False, 7)
 }
 
 
 weather_icons = {
 	"--d-feels-like" : '󰙍 ',
 	"--d-sunrise-sunset" : '󰖜󰖛 ',
-	"--d-high-low" : ' ',
-	"--d-wind" : ' ',
-	"--d-humidity" : ' ',
-	"--d-dew-point" : ' ',
-	"--d-pressure" : ' ',
-	"--d-uw-index" : '󰖙 ',
-	"--d-visibility" : '󰈈 ',
-	"--d-moon-phase" : '󰽥 '
+	"--d-high-low" : '  ',
+	"--d-wind" : '  ',
+	"--d-humidity" : '  ',
+	"--d-dew-point" : '  ',
+	"--d-pressure" : '  ',
+	"--d-uw-index" : ' 󰖙 ',
+	"--d-visibility" : ' 󰈈 ',
+	"--d-moon-phase" : ' 󰽥 '
 }
+
 
 misc_icons = {
-	"arrow-down" : '󰁅 ',
-	"arrow-up" : '󰁝 ',
-	"air-quality" : '󰌪 '
+	"arrow-down" : ' 󰁅 ',
+	"arrow-up" : ' 󰁝 ',
+	"air-quality" : ' 󰌪 '
 }
-
 
 
 def check_options(option, opt_str, value, parser):
 	if parser.values.details:
 		print("ERROR: either option -d, --details alone or multiple --d-* options can be passed")
 		sys.exit()
-	details_dict[opt_str] = True
+	details_dict[opt_str] = (True, details_dict[opt_str][1])
 
 
 def url_usage():
@@ -143,7 +143,7 @@ def iterate_details(details, index):
 		sunrise_sunset = details.select('div[data-testid^=sunriseSunsetContainer]')[0]
 		sunrise_data = sunrise_sunset.select('div[data-testid^=SunriseValue]')[0].p.text
 		sunset_data = sunrise_sunset.select('div[data-testid^=SunsetValue]')[0].p.text
-		return sunrise_data + '/' + sunset_data
+		return ["sunrise/sunset", sunrise_data + '/' + sunset_data]
 
 
 def draw_sun_position():
@@ -152,7 +152,7 @@ def draw_sun_position():
 		step = day_light.seconds/10
 		day_light_left_step = day_light_left/step
 		sun_pos = abs(round(day_light_left_step.seconds) - 10)
-		output = ""
+		output = " "
 		for i in range(0, 11):
 			if i == sun_pos:
 				output += ''
@@ -231,9 +231,14 @@ def main():
 
 	(options, args) = parser.parse_args()
 
+	detail_options = []
+	for i in range (1, len(sys.argv)):
+		if str(sys.argv[i]) in details_dict.keys():
+			detail_options.append((sys.argv[i], details_dict[sys.argv[i]][1]))
+
 	if options.details:
 		for key, value in details_dict.items():
-				if value:
+				if value[0]:
 					print("ERROR: either option -d, --details alone or multiple --d-* options can be passed")
 					sys.exit()
 
@@ -258,7 +263,7 @@ def main():
 		print("ERROR: --one-line option alone doesn't have anything to print")
 		sys.exit()
 
-	printing_style = ' ' + str(options.one_line) + ' ' if options.one_line else '\n'
+	printing_style = ' ' + str(options.one_line) + '' if options.one_line else '\n'
 
 	global 	current_dateTime, sunset_dateTime, sunrise_dateTime, url, soup, day_light, day_light_left
 
@@ -306,50 +311,56 @@ def main():
 				weather_condition = currentWeather.div.string
 				output +=  'Current: ' + getIcon(weather_condition) + temperature + (' ' + timestamp if options.current_timestamp else '') + printing_style if options.verbose else getIcon(weather_condition) + " " + temperature + (' ' + timestamp if options.current_timestamp else '') + printing_style
 
-
 			if any(details_dict.values()) or options.details:
 				details = soup.select('section[data-testid^=TodaysDetailsModule]')[0]
 				other_details_list = details.select('div[data-testid^=WeatherDetailsListItem]')
+			for i in detail_options:
+				if i[1] >= 0:
+					x = other_details_list
+				else:
+					x = details
+				a = iterate_details(x, int(i[1]))
+				output += a[0] + ': ' + a[1] + printing_style if options.verbose else weather_icons[i[0]] + a[1] + printing_style
 
-			if details_dict["--d-feels-like"]:
-				feels_like = iterate_details(details, -1)
-				output += feels_like[0] + ': ' + feels_like[1] + printing_style if options.verbose else weather_icons['--d-feels-like'] + feels_like[1] + printing_style
+			# if details_dict["--d-feels-like"]:
+			# 	feels_like = iterate_details(details, -1)
+			# 	output += feels_like[0] + ': ' + feels_like[1] + printing_style if options.verbose else weather_icons['--d-feels-like'] + feels_like[1] + printing_style
 
-			if details_dict["--d-sunrise-sunset"]:
-				sunrise_sunset = iterate_details(details, -2)
-				output += 'sunrise/sunset: ' + sunrise_sunset+ printing_style if options.verbose else weather_icons['--d-sunrise-sunset'] + sunrise_sunset + printing_style
+			# if details_dict["--d-sunrise-sunset"]:
+			# 	sunrise_sunset = iterate_details(details, -2)
+			# 	output += 'sunrise/sunset: ' + sunrise_sunset+ printing_style if options.verbose else weather_icons['--d-sunrise-sunset'] + sunrise_sunset + printing_style
 
-			if details_dict["--d-high-low"]:
-				high_low = iterate_details(other_details_list, 0)
-				output += high_low[0] + ': ' + high_low[1] + printing_style if options.verbose else weather_icons['--d-high-low'] + high_low[1] + printing_style
+			# if details_dict["--d-high-low"]:
+			# 	high_low = iterate_details(other_details_list, 0)
+			# 	output += high_low[0] + ': ' + high_low[1] + printing_style if options.verbose else weather_icons['--d-high-low'] + high_low[1] + printing_style
 
-			if details_dict["--d-wind"]:
-				wind = iterate_details(other_details_list, 1)
-				output += wind[0] + ': ' + wind[1] + printing_style if options.verbose else weather_icons['--d-wind'] +  wind[1] + printing_style
+			# if details_dict["--d-wind"]:
+			# 	wind = iterate_details(other_details_list, 1)
+			# 	output += wind[0] + ': ' + wind[1] + printing_style if options.verbose else weather_icons['--d-wind'] +  wind[1] + printing_style
 
-			if details_dict["--d-humidity"]:
-				humidity = iterate_details(other_details_list, 2)
-				output += humidity[0] + ': ' + humidity[1] + printing_style if options.verbose else weather_icons['--d-humidity'] + humidity[1] + printing_style
+			# if details_dict["--d-humidity"]:
+			# 	humidity = iterate_details(other_details_list, 2)
+			# 	output += humidity[0] + ': ' + humidity[1] + printing_style if options.verbose else weather_icons['--d-humidity'] + humidity[1] + printing_style
 
-			if details_dict["--d-dew-point"]:
-				dew_point = iterate_details(other_details_list, 3)
-				output += dew_point[0] + ': ' + dew_point[1] + printing_style if options.verbose else weather_icons['--d-dew-point'] + dew_point[1] + printing_style
+			# if details_dict["--d-dew-point"]:
+			# 	dew_point = iterate_details(other_details_list, 3)
+			# 	output += dew_point[0] + ': ' + dew_point[1] + printing_style if options.verbose else weather_icons['--d-dew-point'] + dew_point[1] + printing_style
 
-			if details_dict["--d-pressure"]:
-				pressure = iterate_details(other_details_list, 4)
-				output += pressure[0] + ': ' + pressure[1] + printing_style if options.verbose else weather_icons['--d-pressure'] + pressure[1] + printing_style
+			# if details_dict["--d-pressure"]:
+			# 	pressure = iterate_details(other_details_list, 4)
+			# 	output += pressure[0] + ': ' + pressure[1] + printing_style if options.verbose else weather_icons['--d-pressure'] + pressure[1] + printing_style
 
-			if details_dict["--d-uw-index"]:
-				uw_index = iterate_details(other_details_list, 5)
-				output += uw_index[0] + ': ' + uw_index[1] + printing_style if options.verbose else weather_icons['--d-uw-index'] + uw_index[1] + printing_style
+			# if details_dict["--d-uw-index"]:
+			# 	uw_index = iterate_details(other_details_list, 5)
+			# 	output += uw_index[0] + ': ' + uw_index[1] + printing_style if options.verbose else weather_icons['--d-uw-index'] + uw_index[1] + printing_style
 
-			if details_dict["--d-visibility"]:
-				visibility = iterate_details(other_details_list, 6)
-				output += visibility[0] + ': ' + visibility[1] + printing_style if options.verbose else weather_icons['--d-visibility'] + visibility[1] + printing_style
+			# if details_dict["--d-visibility"]:
+			# 	visibility = iterate_details(other_details_list, 6)
+			# 	output += visibility[0] + ': ' + visibility[1] + printing_style if options.verbose else weather_icons['--d-visibility'] + visibility[1] + printing_style
 
-			if details_dict["--d-moon-phase"]:
-				moon_phase = iterate_details(other_details_list, 7)
-				output += moon_phase[0] + ': ' + moon_phase[1] + printing_style if options.verbose else weather_icons['--d-moon-phase'] + moon_phase[1] + printing_style
+			# if details_dict["--d-moon-phase"]:
+			# 	moon_phase = iterate_details(other_details_list, 7)
+			# 	output += moon_phase[0] + ': ' + moon_phase[1] + printing_style if options.verbose else weather_icons['--d-moon-phase'] + moon_phase[1] + printing_style
 
 			if options.details:
 				feels_like = iterate_details(details, -1)
@@ -386,11 +397,14 @@ def main():
 				output += label + ": " + value + printing_style if options.verbose else misc_icons["air-quality"] + value + printing_style
 
 			if options.one_line:
-				print(output[:-3])
+				print(output[:-2])
 			else:
 				print(output[:-1])
 		except Exception as e:
-			raise e
+			if e.__class__ == requests.exceptions.ConnectionError:
+				print(os.path.basename(__file__) + ": no internet connection")
+			else:
+				raise e
 
 if __name__ == "__main__":
     main()
