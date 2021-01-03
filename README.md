@@ -13,7 +13,8 @@ git clone https://github.com/Templarian/MaterialDesign
 ```
 2. Move `.ttf` file to `~/.local/share/fonts`:
 ```bash
-cd MaterialDesign-Font
+mkdir -p ~/.local/share/fonts
+cd MaterialDesign
 mv *.ttf ~/.local/share/fonts
 fc-cache -v
 ```
