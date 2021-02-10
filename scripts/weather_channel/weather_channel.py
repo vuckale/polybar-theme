@@ -7,6 +7,7 @@ import sys
 import os
 from optparse import OptionParser, OptionValueError
 import optparse
+import re
 
 import secrets
 
@@ -130,6 +131,11 @@ def iterate_details(details, index):
 			svg = data[0].svg
 			if svg != None:
 				return [label[0].text, misc_icons[svg['name']] + data[0].text]
+		
+		if detail.svg['name'] == 'wind':
+			parse_wind = re.sub(r"\D", "", data[0].text)
+			mph_to_kmh = int(parse_wind) * 1.609
+			return [label[0].text, str(round(mph_to_kmh, 2)) + " kmh"]
 
 		return [label[0].text, data[0].text]
 	elif index == -1:
