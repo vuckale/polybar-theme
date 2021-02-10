@@ -5,6 +5,9 @@ if [ ! "$( which rfkill )" = "" ]; then
         if [ $( echo "$status" | grep "Soft blocked: yes" | wc -l ) -gt 0 ] ; then
             rfkill unblock wifi
             notify-send "wifi-switch.sh" "Enabled Wireless, connecting to previously used ssid..." 2>/dev/null
+            # restart polybar
+            sleep 5
+            ~/.config/polybar/launch.sh
         else
             SSID=$( iwgetid -r )
             rfkill block wifi
