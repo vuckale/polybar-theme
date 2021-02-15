@@ -39,15 +39,12 @@ color_env() {
     FOREGROUND_TINT_3=$(echo $(tint $r $g $b 0.1))
     FOREGROUND_EMPTY=$(echo "#55${FOREGROUND_TINT_0//#}")
     # export variables
-    export BACKGROUND FOREGROUND FOREGROUND_ALT ALERT DATE_MODULE_HELPER DATE_MODULE_HELPER_ALT \ 
-    DATE_MODULE_CALENDAR FOREGROUND_TINT_0 FOREGROUND_TINT_1 FOREGROUND_TINT_2 FOREGROUND_TINT_3 \ 
-    FOREGROUND_EMPTY OPEN_WEATHER_API_KEY WEATHER_CHANNEL_PY_URL
+    export BACKGROUND FOREGROUND FOREGROUND_ALT ALERT DATE_MODULE_HELPER DATE_MODULE_HELPER_ALT DATE_MODULE_CALENDAR FOREGROUND_TINT_0 FOREGROUND_TINT_1 FOREGROUND_TINT_2 FOREGROUND_TINT_3 FOREGROUND_EMPTY OPEN_WEATHER_API_KEY WEATHER_CHANNEL_PY_URL
 }
 
 # find path for hwmon (since it may change after reboot)
 hwmon() {
-    HWMON_PATH=$( for i in /sys/class/hwmon/hwmon*/temp*_input; do echo "$(<$(dirname $i)/name): $(cat ${i%_*}_label 2>/dev/null\ 
-    || echo $(basename ${i%_*})) $(readlink -f $i)"; done | grep "coretemp: Core 0" | awk -F' ' '{print $4}' )
+    HWMON_PATH=$( for i in /sys/class/hwmon/hwmon*/temp*_input; do echo "$(<$(dirname $i)/name): $(cat ${i%_*}_label 2>/dev/null || echo $(basename ${i%_*})) $(readlink -f $i)"; done | grep "coretemp: Core 0" | awk -F' ' '{print $4}' )
     export HWMON_PATH
 }
 
