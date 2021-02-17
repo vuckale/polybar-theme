@@ -25,6 +25,7 @@ case "$1" in
             get_mounted_drive_info
         else
             # install udisks2
+            echo "$(date) ${PWD##*/}/`basename "$0"`: no udisks2 installed" >> ../log.txt
             # install libnotify-bin for norify-send notifications
             echo "X"
         fi

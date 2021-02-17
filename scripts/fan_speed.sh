@@ -6,4 +6,5 @@ if [ ! "$( which sensors )" = "" ]; then
 else
     # install lm-sensors or you didn't run sensors-detect
     echo "X"
+    echo "$(date) ${PWD##*/}/`basename "$0"`: it seems like you haven't setup \"lm sensors\" or you haven't run \"sensors-detect\"" >> ../log.txt
 fi

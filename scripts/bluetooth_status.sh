@@ -15,9 +15,11 @@ if [ ! "$( which rfkill )" = "" ]; then
 		fi
 	else
 		# no bluetooth
+		echo "$(date) ${PWD##*/}/`basename "$0"`: no bluetooth interface found" >> ../log.txt
 		echo "Y"
 	fi
 else
 	# no rfkill installed
+	echo "$(date) ${PWD##*/}/`basename "$0"`: no rfkill installed" >> ../log.txt
     echo "X"
 fi

@@ -14,5 +14,6 @@ if [ -d "$sysclass" ]; then
 	fi
 else
 	# no sysclass directory found
+	echo "$(date) ${PWD##*/}/`basename "$0"`: no $sysclass directory found" >> ../log.txt
 	echo "X"
 fi

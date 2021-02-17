@@ -21,8 +21,10 @@ if [ ! "$( which rfkill )" = "" ]; then
     else
         # no wifi
         echo "Y"
+        echo "$(date) ${PWD##*/}/`basename "$0"`: no wifi interface found" >> ../log.txt
     fi
 else
     # no rfkill
     echo "X"
+    echo "$(date) ${PWD##*/}/`basename "$0"`: no rfkill installed" >> ../log.txt
 fi

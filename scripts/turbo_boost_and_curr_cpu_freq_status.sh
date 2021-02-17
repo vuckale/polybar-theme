@@ -16,4 +16,5 @@ if [ ! -z "$freq" ]; then
 	echo "$icon $freq"
 else
 	echo "X"
+	echo "$(date) ${PWD##*/}/`basename "$0"`: lscpu failed" >> ../log.txt
 fi

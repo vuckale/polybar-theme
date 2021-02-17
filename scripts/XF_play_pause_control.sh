@@ -9,4 +9,5 @@ if [ ! $( which pacmd ) == "" ]; then
 else
 	# no pacmd installed
 	echo "X"
+	echo "$(date) ${PWD##*/}/`basename "$0"`: no pacmd installed" >> ../log.txt
 fi

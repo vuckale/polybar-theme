@@ -35,8 +35,10 @@ if [ ! $( which upower ) == "" ]; then
 	else
 		# no sysclass found
 		echo "Y"
+		echo "$(date) ${PWD##*/}/`basename "$0"`: no $sysclass directory found" >> ../log.txt
 	fi
 else
 	# no upower installed
 	echo "X"
+	echo "$(date) ${PWD##*/}/`basename "$0"`: no upower installed" >> ../log.txt
 fi

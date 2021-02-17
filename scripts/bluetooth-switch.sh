@@ -12,8 +12,10 @@ if [ ! "$(which rfkill)" = "" ]; then
     else
 		# no bluetooth
 		notify-send "bluetooth-switch.sh" "No Bluetooth found"
+		echo "$(date) ${PWD##*/}/`basename "$0"`: no bluetooth interface found" >> ../log.txt  
 	fi
 else
 	# no rfkill installed
     notify-send "bluetooth-switch.sh" "rfkill not installed"
+	echo "$(date) ${PWD##*/}/`basename "$0"`: no rfkill installed" >> ../log.txt
 fi
