@@ -6,17 +6,19 @@ clean_up() {
     killall -q polybar
 }
 
-# function for calculating tint from given rgb values and factor
-tint() {
-    r=$(echo "$1 + (255-$1) * $4" | bc -l | awk '{print int($1)}')
-    g=$(echo "$2 + (255-$2) * $4" | bc -l | awk '{print int($1)}')
-    b=$(echo "$3 + (255-$3) * $4" | bc -l | awk '{print int($1)}')
-    res=$(printf \#%02X%02X%02X $r $g $b)
-    echo $res
-}
 
 # parse colors from $COLOR as environment variables and export as env variables
 color_env() {
+
+    # function for calculating tint from given rgb values and factor
+    tint() {
+        r=$(echo "$1 + (255-$1) * $4" | bc -l | awk '{print int($1)}')
+        g=$(echo "$2 + (255-$2) * $4" | bc -l | awk '{print int($1)}')
+        b=$(echo "$3 + (255-$3) * $4" | bc -l | awk '{print int($1)}')
+        res=$(printf \#%02X%02X%02X $r $g $b)
+        echo $res
+    }
+
     COLOR="nord.ini"
     BACKGROUND=$(grep "background "  ~/.config/polybar/colors/$COLOR | cut -d'=' -f2 | sed 's/ //g')
     FOREGROUND=$(grep "foreground "  ~/.config/polybar/colors/$COLOR | cut -d'=' -f2 | sed 's/ //g')
