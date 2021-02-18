@@ -50,11 +50,16 @@ hwmon() {
 
 # launch top-left, top and top-right from config
 run() {
-    echo "---" | tee -a /tmp/polybar1.log /tmp/polybar2.log /tmp/polybar3.log
-    polybar --config=~/.config/polybar/config.ini top-left >>/tmp/polybar1.log 2>&1 & disown
-    polybar --config=~/.config/polybar/config.ini top >>/tmp/polybar2.log 2>&1 & disown
-    polybar --config=~/.config/polybar/config.ini top-right >>/tmp/polybar3.log 2>&1 & disown
-    echo "Launched polybar..."
+    logfile="$HOME/.config/polybar/log.txt"
+    current_date_time=$( echo "$(date)" )
+    echo "launching polybar: $current_date_time" >> $logfile
+    polybar --config=~/.config/polybar/config.ini top-left 2>&1 & disown
+    echo "polybar top-left" >> $logfile
+    polybar --config=~/.config/polybar/config.ini top 2>&1 & disown
+    echo "polybar top" >> $logfile
+    polybar --config=~/.config/polybar/config.ini top-right 2>&1 & disown
+    echo "polybar top-left" >> $logfile
+    echo "finished launching polybar..." >> $logfile
 }
 
 # call all above functions in order
