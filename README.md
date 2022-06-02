@@ -9,12 +9,12 @@
 
 1. Clone Material Design repository:
 ```bash
-git clone https://github.com/Templarian/MaterialDesign
+git clone https://github.com/Templarian/MaterialDesign-Font.git
 ```
 2. Move `.ttf` file to `~/.local/share/fonts`:
 ```bash
 mkdir -p ~/.local/share/fonts
-cd MaterialDesign
+cd MaterialDesign-Font
 mv *.ttf ~/.local/share/fonts
 fc-cache -v
 ```
